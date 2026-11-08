@@ -79,7 +79,7 @@ void atualizarAltura(No *no){
 
 	if(no){
 
-		no->altura = 1 + maior(altura(no->esquerda), altura(no->direita));
+		no->altura = 1 + maior(altura(no->esquerda), altura(no->direita)); //Um no, por existir, tem altura 1. Se possuir filhos, devera ser somada a maior altura entre os filhos
 
 	}
 
@@ -90,11 +90,11 @@ No* menorValor(No *no){
 
 	while(no->esquerda){
 
-		no = no->esquerda;
+		no = no->esquerda; //Adentra o filho esquerdo enquanto existir
 
 	}
 
-	return no;
+	return no; //Retorna o no mais a esquerda encontrado
 
 }
 
@@ -103,61 +103,63 @@ int fatorBalanceamento(No *no){
 
 	if(!no){
 
-		return 0;
+		return 0; //Caso o no esteja vazio, seu fator de balanceamento eh 0
 
 	}
 
-	return altura(no->esquerda) - altura(no->direita);
+	return altura(no->esquerda) - altura(no->direita); //Calculo do Fator de Balanceamento (altura da subarvore esquerda - altura da subarvore direita)
 
 }
 
-//Rotacao LL
+//Rotacao LL - Arvore desbalanceada para a esquerda
 No* rotacaoDireita(No *y){
 
 	No *x = y->esquerda; //Copia o no esquerdo para *x
 	No *T2 = x->direita; //Copia o no direito de x (y->esquerdo) para T2, uma variavel que vai armazenar o no de forma temporaria
 
-	x->direita = y;
-	y->esquerda = T2;
+	x->direita = y; //No direito de *x passa a ser y (o no-raiz inicial)
+	y->esquerda = T2; //No esquerdo de y passa a ser o mesmo que T2 apontava (antigo x->direita)
+	
+	//Atualizando alturas após alterações
+	atualizarAltura(y); //Primeiro se atualiza a altura do no y, pois ele se tornou um filho de x
+	atualizarAltura(x); //Entao se atualiza a altura de x que diz respeito a altura da subarvore completa
 
-	atualizarAltura(y);
-	atualizarAltura(x);
-
-	return x;
+	return x; //Retorna a nova raiz da subarvore
 
 }
 
-//Rotacao RR
+//Rotacao RR - Arvore desbalanceada para a direita
 No* rotacaoEsquerda(No *x){
 
-	No *y = x->direita;
-	No *T2 = y->esquerda;
+	No *y = x->direita; //Copia o no direito para *y
+	No *T2 = y->esquerda; //Copia o no esquerdo de y (x->direito) para T2, uma variavel que vai armazenar o no de forma temporaria
 
-	y->esquerda = x;
-	x->direita = T2;
+	y->esquerda = x; //No esquerdo de *y passa a ser x (o no-raiz inicial)
+	x->direita = T2; //No direito de x passa a ser o mesmo que T2 apontava (antigo y->esquerda)
 
-	atualizarAltura(x);
-	atualizarAltura(y);
+	//Atualizando alturas após alterações
+	atualizarAltura(x); //Primeiro se atualiza a altura do no x, pois ele se tornou um filho de y
+	atualizarAltura(y); //Entao se atualiza a altura de y que diz respeito a altura da subarvore completa
 
-	return y;
+	return y; //Retorna a nova raiz da subarvore
 
 }
 
-//Rotacao LR
+//Rotacao LR - Arvore desbalanceada na direita da subarvore esquerda
 No* rotacaoEsquerdaDireita(No *z){
 
-	z->esquerda = rotacaoEsquerda(z->esquerda);
+	z->esquerda = rotacaoEsquerda(z->esquerda); //Realiza a rotacao a esquerda na subarvore esquerda
 
-	return rotacaoDireita(z);
+	return rotacaoDireita(z); //Realiza a rotacao a direita na raiz
 
 }
 
-//Rotacao RL
+//Rotacao RL - Arvore desbalanceada na esquerda da subarvore direita
 No* rotacaoDireitaEsquerda(No *z){
 
-	z->direita = rotacaoDireita(z->direita);
+	z->direita = rotacaoDireita(z->direita); //Realiza a rotacao a direita na subarvore direita
 
-	return rotacaoEsquerda(z);
+	return rotacaoEsquerda(z); //Realiza a rotacao a esquerda na raiz
 
 }
 
