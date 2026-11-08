@@ -41,8 +41,8 @@ struct No{
 
 	int altura; //Altura do no em especifico
 
-	No *esquerda; //Ponteiro para o filho esquerdo (se nao existir, aponta para NULL)
-	No *direita; //Ponteiro para o filho direito (se nao existir, aponta para NULL)
+	No *esquerda; //Ponteiro para o filho esquerdo (se nao existir, apontara para NULL -> Processo feito durante o metodo inserir())
+	No *direita; //Ponteiro para o filho direito (se nao existir, apontara para NULL -> Processo feito durante o metodo inserir())
 
 };
 
@@ -57,7 +57,7 @@ int altura(No *no){
 
 	}
 
-	return no->altura;
+	return no->altura; //Retorna a informacao da altura presente na estrutura
 
 }
 
@@ -115,7 +115,7 @@ int fatorBalanceamento(No *no){
 No* rotacaoDireita(No *y){
 
 	No *x = y->esquerda; //Copia o no esquerdo para *x
-	No *T2 = x->direita; //Copia o no direito de x (y->esquerdo) para T2, uma variavel que vai armazenar o no de forma temporaria
+	No *T2 = x->direita; //Copia o no direito de x (y->esquerda) para T2, uma variavel que vai armazenar o no de forma temporaria
 
 	x->direita = y; //No direito de *x passa a ser y (o no-raiz inicial)
 	y->esquerda = T2; //No esquerdo de y passa a ser o mesmo que T2 apontava (antigo x->direita)
@@ -132,7 +132,7 @@ No* rotacaoDireita(No *y){
 No* rotacaoEsquerda(No *x){
 
 	No *y = x->direita; //Copia o no direito para *y
-	No *T2 = y->esquerda; //Copia o no esquerdo de y (x->direito) para T2, uma variavel que vai armazenar o no de forma temporaria
+	No *T2 = y->esquerda; //Copia o no esquerdo de y (x->direita) para T2, uma variavel que vai armazenar o no de forma temporaria
 
 	y->esquerda = x; //No esquerdo de *y passa a ser x (o no-raiz inicial)
 	x->direita = T2; //No direito de x passa a ser o mesmo que T2 apontava (antigo y->esquerda)
@@ -163,166 +163,184 @@ No* rotacaoDireitaEsquerda(No *z){
 
 }
 
-//Insere na AVL o vertice lido na DFS
+//Insere de forma recursiva na AVL o vertice lido na DFS
 No* inserir(No *no, int num_linha){
-
+	
+	//Inicializacao do no ocorre somente se este estiver vazio
 	if(!no){
 
-		No *novo = (No*) malloc(sizeof(No));
+		No *novo = (No*) malloc(sizeof(No)); //Alocacao dinamica do no a ser adicionado
 
 		if(!novo){
 
 			printf("\nAlocacao mal-sucedida!\n");
-			exit(1);
+			exit(1); //Em caso de erro na alocacao, encerra o programa
 
 		}
 
-		novo->vertice = num_linha;
+		novo->vertice = num_linha; //Guarda o numero do vertice lido na linha
 
-		novo->altura = 1;
+		novo->altura = 1; //Como o no acabou de ser criado, sua altura é definida diretamente como 1
 
-		novo->esquerda = NULL;
-		novo->direita = NULL;
+		novo->esquerda = NULL; //Inicializacao do ponteiro para o filho esquerdo (atualmente inexistente)
+		novo->direita = NULL; //Inicializacao do ponteiro para o filho direito (atualmente inexistente)
 
-		return novo;
-
-	}
-
-	if(num_linha < no->vertice){
-
-		no->esquerda = inserir(no->esquerda, num_linha);
-
-	} else if(num_linha > no->vertice){
-
-		no->direita = inserir(no->direita, num_linha);
-
-	} else{
-
-		return no;
+		return novo; //Retorna o no criado
 
 	}
 
-	atualizarAltura(no);
+	//Busca de onde deve ser inserido o novo vertice lido da matriz de adjacência
+	//Necessaria para manter a arvore ordenada
+	if(num_linha < no->vertice){ //Se o vertice tiver indice menor que o presente na arvore sendo analisado:
 
-	int fb = fatorBalanceamento(no);
+		no->esquerda = inserir(no->esquerda, num_linha); //A insercao sera feita no filho esquerdo do no analisado
 
-	//LL
+	} else if(num_linha > no->vertice){ //Se o vertice tiver indice maior que o presente na arvore sendo analisado:
 
+		no->direita = inserir(no->direita, num_linha); //A insercao sera feita no filho direito do no analisado
+
+	} else{ //Se o vertice tiver indice igual ao presente na arvore sendo analisado:
+
+		return no; //Ele nao sera inserido. Sera encerrada o metodo inserir() retornando o no analisado
+
+	}
+
+	atualizarAltura(no); //Apos a insercao, atualiza-se a altura do no inicial
+
+	int fb = fatorBalanceamento(no); //Calculo do Fator de Balanceamento para rotacao posterior
+
+	//Verifica desbalaceamento na subarvore esquerda
+	//E verifica se o valor foi adicionado a esquerda na subarvore esquerda
 	if(fb > 1 && num_linha < no->esquerda->vertice){
 
-		return rotacaoDireita(no);
+		return rotacaoDireita(no); //Realiza a rotacao LL no no
 
 	}
 
-	//RR
-
+	//Verifica desbalaceamento na subarvore direita
+	//E verifica se o valor foi adicionado a direita na subarvore direita
 	if(fb < -1 && num_linha > no->direita->vertice){
 
-		return rotacaoEsquerda(no);
+		return rotacaoEsquerda(no); //Realiza a rotacao RR no no
 
 	}
 
-	//LR
-
+	//Verifica desbalaceamento na subarvore esquerda
+	//E verifica se o valor foi adicionado a direita na subarvore esquerda
 	if(fb > 1 && num_linha > no->esquerda->vertice){
 
-		return rotacaoEsquerdaDireita(no);
+		return rotacaoEsquerdaDireita(no); //Realiza a rotacao LR no no
 
 	}
 
-	//RL
-
+	//Verifica desbalaceamento na subarvore direita
+	//E verifica se o valor foi adicionado a esquerda na subarvore direita
 	if(fb < -1 && num_linha < no->direita->vertice){
 
-		return rotacaoDireitaEsquerda(no);
+		return rotacaoDireitaEsquerda(no); //Realiza a rotacao RL no no
 
 	}
 
-	return no;
+	return no; //Retorna a subarvore balanceada
 
 }
 
+//Remove de forma recursiva o vertice desejado
 No* remover(No *no, int num_linha){
 
+	//Se o no estiver vazio, retorna NULL
 	if(!no){
 
 		return NULL;
 
 	}
 
-	if(num_linha < no->vertice){
+	//Busca de onde deve ser removido o vertice desejado
+	if(num_linha < no->vertice){ //Se o valor desejado for menor que o valor do vertice guardado no no analisado:
 
-		no->esquerda = remover(no->esquerda, num_linha);
+		no->esquerda = remover(no->esquerda, num_linha); //A remocao sera feita no filho esquerdo do no analisado
 
-	} else if(num_linha > no->vertice){
+	} else if(num_linha > no->vertice){ //Se o valor desejado for maior que o valor do vertice guardado no no analisado:
 
-		no->direita = remover(no->direita, num_linha);
+		no->direita = remover(no->direita, num_linha); //A remocao sera feita no filho direito do no analisado
 
-	} else{
-
+	} else{ //Caso o valor seja igual ao do vertice guardado no no analisado, entao o vertice a ser removido foi encontrado
+		
+		//Caso 1: No sem filhos
 		if(!no->esquerda && !no->direita){
 
-			free(no);
+			free(no); //O no eh simplesmente liberado
 
-			return NULL;
+			return NULL; //Retorna o valor Vazio
 
 		}
 
+		//Caso 2: No sem filho esquerdo
 		if(!no->esquerda){
 
-			No *aux = no->direita;
-			free(no);
+			No *aux = no->direita; //Guarda o filho direito
+			free(no); //Libera o no
 
-			return aux;
+			return aux; //Retorna o filho direito para ocupar a posicao na arvore
 
 		}
 
+		//Caso 3: No sem filho direito
 		if(!no->direita){
 
-			No *aux = no->esquerda;
-			free(no);
+			No *aux = no->esquerda; //Guarda o filho esquerdo
+			free(no); //Libera o no
 
-			return aux;
+			return aux; //Retorna o filho esquerdo para ocupar a posicao na arvore
 
 		}
 
-		No *aux = menorValor(no->direita);
+		//Caso 4: No com ambos filhos esquerdo e direito
+		No *aux = menorValor(no->direita); //Busca e guarda o filho mais a esquerda na subarvore direita
 
-		no->vertice = aux->vertice;
+		no->vertice = aux->vertice; //Substitui o valor do vertice atual pelo vertice do filho mais a esquerda encontrado
 
-		no->direita = remover(no->direita, aux->vertice);
+		no->direita = remover(no->direita, aux->vertice); //Remocao do filho mais a esquerda da subarvore direita
 
 	}
 
-	atualizarAltura(no);
+	atualizarAltura(no); //Apos a remocao, atualiza-se a altura do no inicial
 
-	int fb = fatorBalanceamento(no);
+	int fb = fatorBalanceamento(no); //Calculo do Fator de Balanceamento para rotacao posterior
 
+	//Verifica desbalaceamento na subarvore esquerda
+	//E verifica o desbalanceamento na subarvore esquerda (Caso LL)
 	if(fb > 1 && fatorBalanceamento(no->esquerda) >= 0){
 
-		return rotacaoDireita(no);
+		return rotacaoDireita(no); //Realiza a rotacao LL no no
 
 	}
-
+	
+	//Verifica desbalaceamento na subarvore direita
+	//E verifica o desbalanceamento na subarvore direita (Caso RR)
 	if(fb < -1 && fatorBalanceamento(no->direita) <= 0){
 
-		return rotacaoEsquerda(no);
+		return rotacaoEsquerda(no); //Realiza a rotacao RR no no
 
 	}
-
+	
+	//Verifica desbalaceamento na subarvore esquerda
+	//E verifica o desbalanceamento na subarvore esquerda (Caso LR)
 	if(fb > 1 && fatorBalanceamento(no->esquerda) < 0){
 
-		return rotacaoEsquerdaDireita(no);
+		return rotacaoEsquerdaDireita(no); //Realiza a rotacao LR no no
 
 	}
 
+	//Verifica desbalaceamento na subarvore direita
+	//E verifica o desbalanceamento na subarvore direita (Caso RL)
 	if(fb < -1 && fatorBalanceamento(no->direita) > 0){
 
-		return rotacaoDireitaEsquerda(no);
+		return rotacaoDireitaEsquerda(no); //Realiza a rotacao RL no no
 
 	}
 
-	return no;
+	return no; //Retorna o no balanceado
 
 }
 
