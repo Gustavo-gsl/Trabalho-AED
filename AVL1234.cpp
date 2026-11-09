@@ -566,8 +566,7 @@ void executafuncao (){   										// É dentro desta função que o aluno dever
 		puts("===================================");
 		puts ("1 - Inserir");
 		puts ("2 - Remover linha");
-		puts ("3 - Buscar linha");
-		puts ("4 - Mostrar arvore equilibrada");
+		puts ("3 - Mostrar arvore equilibrada");
 		puts ("0 - Voltar ao menu de arquivos");
 		puts ("Digite a opcao desejada: ");
 		scanf("%d", &op);
@@ -610,24 +609,7 @@ void executafuncao (){   										// É dentro desta função que o aluno dever
 				    
 				    break;
 
-
 				case 3:
-					printf("Vertice a buscar: ");
-					
-					scanf("%d", &valor);
-					
-					if(buscar(raiz, valor)){
-						
-						printf("Vertice %d encontrado.\n", valor);
-						
-					} else {
-						
-						printf("Vertice %d nao encontrado.\n", valor);
-					}
-					
-					break;
-
-				case 4:
 					puts("\nArvore AVL:\n");
 					if(raiz == NULL) puts("A arvore esta vazia!"); else mostrarArvore(raiz, 0);
 					puts("\nEm ordem:");
