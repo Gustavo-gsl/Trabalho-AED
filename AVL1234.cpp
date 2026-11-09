@@ -3,12 +3,12 @@
 #include <string.h>
 #define MAX 101
 
-// ATEN��O: O c�lculo da complexidade deve incluir todo o cc�digo, inclusive a leitura do arquivo.
+// ATENÇÃO: O cálculo da complexidade deve incluir todo o ccódigo, inclusive a leitura do arquivo.
 
 
 char nome_arquivo[50], aux[MAX];								// proibido alterar esta linha
 int opcao, tamanho, i, j, n, m, digrafo, matriz_adj[MAX][MAX];  // proibido alterar esta linha
-// Declare vari�veis globais a partir daqui.
+// Declare variáveis globais a partir daqui.
 
 int visitado [MAX]; // marca os vertices ja visitado
 int visitado_ordem[MAX]; // guarda a ordem da visita
@@ -121,7 +121,7 @@ No* rotacaoDireita(No *y){
 	
 	y->esquerda = T2; //No esquerdo de y passa a ser o mesmo que T2 apontava (antigo x->direita)
 	
-	//Atualizando alturas após alterações
+	//Atualizando alturas apos alteracoes
 	
 	atualizarAltura(y); //Primeiro se atualiza a altura do no y, pois ele se tornou um filho de x
 	
@@ -142,7 +142,7 @@ No* rotacaoEsquerda(No *x){
 	
 	x->direita = T2; //No direito de x passa a ser o mesmo que T2 apontava (antigo y->esquerda)
 
-	//Atualizando alturas após alterações
+	//Atualizando alturas apos alteracoes
 	atualizarAltura(x); //Primeiro se atualiza a altura do no x, pois ele se tornou um filho de y
 	
 	atualizarAltura(y); //Entao se atualiza a altura de y que diz respeito a altura da subarvore completa
@@ -186,7 +186,7 @@ No* inserir(No *no, int num_linha){
 
 		novo->vertice = num_linha; //Guarda o numero do vertice lido na linha
 
-		novo->altura = 1; //Como o no acabou de ser criado, sua altura é definida diretamente como 1
+		novo->altura = 1; //Como o no acabou de ser criado, sua altura Ã© definida diretamente como 1
 
 		novo->esquerda = NULL; //Inicializacao do ponteiro para o filho esquerdo (atualmente inexistente)
 		
@@ -196,7 +196,7 @@ No* inserir(No *no, int num_linha){
 
 	}
 
-	//Busca de onde deve ser inserido o novo vertice lido da matriz de adjacência
+	//Busca de onde deve ser inserido o novo vertice lido da matriz de adjacÃªncia
 	//Necessaria para manter a arvore ordenada
 	if(num_linha < no->vertice){ //Se o vertice tiver indice menor que o presente na arvore sendo analisado:
 
@@ -566,8 +566,7 @@ void executafuncao (){   										// É dentro desta função que o aluno dever
 		puts("===================================");
 		puts ("1 - Inserir");
 		puts ("2 - Remover linha");
-		puts ("3 - Buscar linha");
-		puts ("4 - Mostrar arvore equilibrada");
+		puts ("3 - Mostrar arvore equilibrada");
 		puts ("0 - Voltar ao menu de arquivos");
 		puts ("Digite a opcao desejada: ");
 		scanf("%d", &op);
@@ -610,24 +609,7 @@ void executafuncao (){   										// É dentro desta função que o aluno dever
 				    
 				    break;
 
-
 				case 3:
-					printf("Vertice a buscar: ");
-					
-					scanf("%d", &valor);
-					
-					if(buscar(raiz, valor)){
-						
-						printf("Vertice %d encontrado.\n", valor);
-						
-					} else {
-						
-						printf("Vertice %d nao encontrado.\n", valor);
-					}
-					
-					break;
-
-				case 4:
 					puts("\nArvore AVL:\n");
 					if(raiz == NULL) puts("A arvore esta vazia!"); else mostrarArvore(raiz, 0);
 					puts("\nEm ordem:");
@@ -653,73 +635,73 @@ void executafuncao (){   										// É dentro desta função que o aluno dever
 int main() {
 	opcao = 1;
 
-	while(opcao != 0){
-		inicio:
-		tamanho = 0;
-		m = 0;
-		digrafo = 0;
-		system("cls");
-		fflush(stdin);
-		printf("Digite o nome do arquivo (sem o .txt): ");
-		gets(nome_arquivo);
-		FILE *arquivo;
-		strcat(nome_arquivo,".txt");
-
-		if((arquivo = fopen(nome_arquivo,"r")) != NULL){
-			while(fgets(aux, MAX, arquivo)) {
-				char *elemento;
-				elemento = strtok(aux, " ");
-				while (elemento != NULL){
-					elemento = strtok(NULL, " ");
-				}
-				tamanho = tamanho + 1;
-			}
-			fclose(arquivo);
-
-			printf ("\n --------------------------- MATRIZ DE ADJACÊNCIA ---------------------------\n");
-
-			if((arquivo = fopen(nome_arquivo,"r")) != NULL){
-				printf("\n");
-				for(int i = 1; i <= tamanho; i++){
-					for(int j = 1; j <= tamanho; j++){
-						fscanf(arquivo, "%d", &matriz_adj[i][j]);
-						printf("%3d ", matriz_adj[i][j]);
-					}
-					printf("\n");
-				}
-			}
-			fclose(arquivo);
-			n = tamanho;
-
-			for(int i = 1; i <= tamanho; i++){
-				for(int j = 1; j <= tamanho; j++){
-					if (matriz_adj[i][j] != matriz_adj[j][i]) {
-						digrafo = 1;   // é dígrafo
-					}
-				}
-			}
-
-			for(int i = 1; i <= tamanho; i++){
-				for(int j = 1; j <= tamanho; j++){
-					if (digrafo == 1 && matriz_adj[i][j] != 0) {
-						m = m + 1;
-					}
-					if (digrafo == 0 && matriz_adj[i][j] != 0 && i <= j) {
-						m = m + 1;
+    while(opcao != 0){
+        inicio:
+        tamanho = 0;
+        m = 0;
+        digrafo = 0;
+        system("cls"); 
+        fflush(stdin); 
+        printf("Digite o nome do arquivo (sem o .txt): ");
+        gets(nome_arquivo);
+        FILE *arquivo; 
+        strcat(nome_arquivo,".txt"); 
+            
+        if((arquivo = fopen(nome_arquivo,"r")) != NULL){
+        	while(fgets(aux, MAX, arquivo)) { 
+                   char *elemento; 
+                   elemento = strtok(aux, " ");
+                    while (elemento != NULL){
+                        elemento = strtok(NULL, " "); 
+                    }
+                    tamanho = tamanho + 1; 
+                }
+                fclose(arquivo);
+                
+                printf ("\n --------------------------- MATRIZ DE ADJACÊNCIA ---------------------------\n");
+                
+                if((arquivo = fopen(nome_arquivo,"r")) != NULL){
+                    printf("\n");
+                    for(int i = 1; i <= tamanho; i++){
+                        for(int j = 1; j <= tamanho; j++){
+                            fscanf(arquivo, "%d", &matriz_adj[i][j]);
+							printf("%3d ", matriz_adj[i][j]); 
+                        }
+                        printf("\n");
+                    }
+                }
+                fclose(arquivo);
+				n = tamanho;
+				
+                for(int i = 1; i <= tamanho; i++){
+                    for(int j = 1; j <= tamanho; j++){
+						if (matriz_adj[i][j] != matriz_adj[j][i]) {
+							digrafo = 1;   // é dígrafo
+						}
 					}
 				}
-			}
-
-			printf ("\nN = %d e M = %d \n \n",n,m);
-		} else {
-			printf("\nErro ao abrir o arquivo/Erro ao localizar o arquivo\n\n");
-
-		}
-
-		executafuncao ();
-		printf("\nDigite 0 para sair ou qualquer outra coisa para continuar: ");
+				
+                for(int i = 1; i <= tamanho; i++){
+                    for(int j = 1; j <= tamanho; j++){
+						if (digrafo == 1 && matriz_adj[i][j] != 0) {
+							m = m + 1;
+						} 
+						if (digrafo == 0 && matriz_adj[i][j] != 0 && i <= j) {
+							m = m + 1;
+						}
+					}
+				}
+				
+	          printf ("\nN = %d e M = %d \n \n",n,m);     
+            } else {
+                printf("\nErro ao abrir o arquivo/Erro ao localizar o arquivo\n\n");
+                
+            }
+        	  
+		executafuncao ();       
+        printf("\nDigite 0 para sair ou qualquer outra coisa para continuar: ");
 		scanf("%d", &opcao);
-
-	}
-	return 0;
+        
+    }
+    return 0;
 }
